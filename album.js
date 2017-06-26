@@ -26,7 +26,19 @@ var albumMarconi = {
         { title: 'Can you hear me now?', duration: '3:14' },
         { title: 'Wrong phone number', duration: '2:15'}
     ]
-
+    var albumThamer = {
+        title: 'FirstSong',
+        artist: 'Thamer Alhejailan',
+        label: 'EM',
+        year: '2017',
+        albumArtUrl: 'assets/images/album_covers/13.png',
+        songs: [
+            { title: 'Hello, Operator?', duration: '1:01' },
+            { title: 'Ring, ring, ring', duration: '5:01' },
+            { title: 'Fits in your pocket', duration: '3:21'},
+            { title: 'Can you hear me now?', duration: '3:14' },
+            { title: 'Wrong phone number', duration: '2:15'}
+        ]
 
 };
 var createSongRow = function(songNumber, songName, songLength) {
