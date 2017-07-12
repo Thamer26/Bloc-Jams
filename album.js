@@ -11,6 +11,12 @@ var setSong = function (songNumber) {
 });
   ]
 };
+var seek = function(time) {
+    if (currentSoundFile) {
+        currentSoundFile.setTime(time);
+    }
+}
+
      setVolume(currentVolume);
  };
 
@@ -35,7 +41,8 @@ var createSongRow = function(songNumber, songName, songLength) {
 
      var clickHandler = function() {
       var songNumber = parseInt($(this).attr('data-song-number')) ;
-
+      var updateSeekBarWhileSongPlays = function() {
+          if (currentSoundFile) {
 
      var onHover = function(event) {
          // Placeholder for function logic
@@ -61,6 +68,64 @@ var setCurrentAlbum = function(album) {
    var trackIndex = function(album, song) {
        return album.songs.indexOf(song);
    };
+   var updateSeekPercentage = function($seekBar, seekBarFillRatio) {
+      var offsetXPercent = seekBarFillRatio * 100;
+      // #1
+      offsetXPercent = Math.max(0, offsetXPercent);
+      offsetXPercent = Math.min(100, offsetXPercent);
+
+      // #2
+      var percentageString = offsetXPercent + '%';
+      $seekBar.find('.fill').width(percentageString);
+      $seekBar.find('.thumb').css({left: percentageString});
+   };
+   var setupSeekBars = function() {
+       var $seekBars = $('.player-bar .seek-bar');
+
+       $seekBars.click(function(event) {
+           // #3
+           var offsetX = event.pageX - $(this).offset().left;
+           var barWidth = $(this).width();
+           // #4
+           var seekBarFillRatio = offsetX / barWidth;
+
+           // #5
+           var updateSeekBarWhileSongPlays = function() {
+                if (currentSoundFile) {
+                    // #10
+                    currentSoundFile.bind('timeupdate', function(event) {
+                        // #11
+                        var seekBarFillRatio = this.getTime() / this.getDuration();
+                        var $seekBar = $('.seek-control .seek-bar');
+
+                        updateSeekPercentage($seekBar, seekBarFillRatio);
+                    });
+                }
+            };
+
+
+           updateSeekPercentage($(this), seekBarFillRatio);
+       });
+       $seekBars.find('.thumb').mousedown(function(event) {
+      // #8
+      var $seekBar = $(this).parent();
+
+      // #9
+      $(document).bind('mousemove.thumb', function(event){
+          var offsetX = event.pageX - $seekBar.offset().left;
+          var barWidth = $seekBar.width();
+          var seekBarFillRatio = offsetX / barWidth;
+
+          updateSeekPercentage($seekBar, seekBarFillRatio);
+      });
+
+      // #10
+      $(document).bind('mouseup.thumb', function() {
+          $(document).unbind('mousemove.thumb');
+          $(document).unbind('mouseup.thumb');
+      });
+  });
+   };
 
     // #2
     $albumTitle.text(album.title);
@@ -82,11 +147,14 @@ var previousSong = function() {
      ...
      setSong(currentSongIndex + 1);
      currentSoundFile.play();
+     var updateSeekBarWhileSongPlays = function() {
+    if (currentSoundFile) {
      ...
  };
 
  var nextSong = function() {
-     ...
+     ... var updateSeekBarWhileSongPlays = function() {
+     if (currentSoundFile) {
      setSong(currentSongIndex + 1);
      currentSoundFile.play();
      ...
@@ -121,6 +189,8 @@ var currentVolume = 80;
  var $previousButton = $('.main-controls .previous');
  var $nextButton = $('.main-controls .next');
 
+
+
 $(document).ready(function() {
             });
 
@@ -131,6 +201,7 @@ $(document).ready(function() {
       }
       $(document).ready(function() {
           setCurrentAlbum(albumPicasso);
+          setupSeekBars();
           $previousButton.click(previousSong);
           $nextButton.click(nextSong);
 
