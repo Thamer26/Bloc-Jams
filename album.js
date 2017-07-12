@@ -1,46 +1,8 @@
-var albumPicasso = {
-    title: 'The Colors',
-    artist: 'Pablo Picasso',
-    label: 'Cubism',
-    year: '1881',
-    albumArtUrl: 'assets/images/album_covers/01.png',
-    songs: [
-        { title: 'Blue', duration: '4:26' },
-        { title: 'Green', duration: '3:14' },
-        { title: 'Red', duration: '5:01' },
-        { title: 'Pink', duration: '3:21'},
-        { title: 'Magenta', duration: '2:15'}
-    ]
+var setSong = function (songNumber) {
+  currentlyPlayingSongNumber= parseInt (songNumber)
+  currentSongFromAlbum = currentAlbum.songs [songNumber-2]
 };
 
-var albumMarconi = {
-    title: 'The Telephone',
-    artist: 'Guglielmo Marconi',
-    label: 'EM',
-    year: '1909',
-    albumArtUrl: 'assets/images/album_covers/20.png',
-    songs: [
-        { title: 'Hello, Operator?', duration: '1:01' },
-        { title: 'Ring, ring, ring', duration: '5:01' },
-        { title: 'Fits in your pocket', duration: '3:21'},
-        { title: 'Can you hear me now?', duration: '3:14' },
-        { title: 'Wrong phone number', duration: '2:15'}
-    ]
-    var albumThamer = {
-        title: 'FirstSong',
-        artist: 'Thamer Alhejailan',
-        label: 'EM',
-        year: '2017',
-        albumArtUrl: 'assets/images/album_covers/13.png',
-        songs: [
-            { title: 'Hello, Operator?', duration: '1:01' },
-            { title: 'Ring, ring, ring', duration: '5:01' },
-            { title: 'Fits in your pocket', duration: '3:21'},
-            { title: 'Can you hear me now?', duration: '3:14' },
-            { title: 'Wrong phone number', duration: '2:15'}
-        ]
-
-};
 var createSongRow = function(songNumber, songName, songLength) {
     var template =
        '<tr class="album-view-song-item">'
@@ -70,13 +32,16 @@ var createSongRow = function(songNumber, songName, songLength) {
        return $row;};
 
 var setCurrentAlbum = function(album) {
-    // #1
-    var $albumTitle = $('.album-view-title');
+    currentAlbum = album;
+   var $albumTitle = $('.album-view-title');
    var $albumArtist = $('.album-view-artist');
    var $albumReleaseInfo = $('.album-view-release-info');
    var $albumImage = $('.album-cover-art');
    var $albumSongList = $('.album-view-song-list');
 
+   var trackIndex = function(album, song) {
+       return album.songs.indexOf(song);
+   };
 
     // #2
     $albumTitle.text(album.title);
@@ -101,14 +66,26 @@ var setCurrentAlbum = function(album) {
 
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
 var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
+var playerBarPlayButton = '<span class="ion-play"></span>';
+var playerBarPauseButton = '<span class="ion-pause"></span>';
 
-var currentlyPlayingSong = null;
+var currentAlbum = null;
 
+if (currentlyPlayingSongNumber !== songNumber) {
+      $(this).html(pauseButtonTemplate);
+      currentlyPlayingSongNumber = songNumber;
+      currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+      var updatePlayerBarSong = function() {
+  } else if (currentlyPlayingSongNumber === songNumber) {
+      $(this).html(playButtonTemplate);
+      $('.main-controls .play-pause').html(playerBarPlayButton);
+var currentlyPlayingSongNumber = null;
+var currentSongFromAlbum = null;
 
+ var $previousButton = $('.main-controls .previous');
+ var $nextButton = $('.main-controls .next');
 
 $(document).ready(function() {
-
-
             });
 
     // Only target individual song rows during event delegation
@@ -116,7 +93,15 @@ $(document).ready(function() {
       event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
 
       }
+      $(document).ready(function() {
+          setCurrentAlbum(albumPicasso);
+          $previousButton.click(previousSong);
+          $nextButton.click(nextSong);
+
+console.log("songNumber type is " + typeof songNumber + "\n and currentlyPlayingSongNumber type is " + typeof currentlyPlayingSongNumber);
+var songNumber = parseInt($(this).attr('data-song-number'));
+
+
  });
 
-    setCurrentAlbum(albumPicasso);
 };
